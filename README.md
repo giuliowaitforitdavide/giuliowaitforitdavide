@@ -9,8 +9,6 @@
 
 - 👯 I’m looking to collaborate on [fastify](https://github.com/fastify/fastify)
 
-- 💬 Ask me about **fastify**
-
 - 📫 How to reach me **giulio.davide.97@gmail.com**
 
 - ⚡ Fun fact **I'm a music nerd 🎵**
