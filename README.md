@@ -6,7 +6,7 @@
 
 ###
 
-<p align="left">I'm a Software Engineer at @fiscozen where most of the time I work using Django and Vue.js.<br>In the Open Source world, I love contributing at NodeJS project (<a href="https://github.com/fastify/fastify">fastify</a> is my favourite) but I also developed a Python library for Recommendation Systems called <a href="https://github.com/giuliowaitforitdavide/recsyslearn">recsyslearn</a>. <br/> Go <a href="https://github.com/giuliowaitforitdavide/recsyslearn">check</a> it out and leave a ⭐ if you liked it 🥰</p>
+<p align="left">I'm a Software Engineer at @fiscozen where most of the time I work using Django and Vue.js.<br>In the Open Source world, I love contributing at NodeJS projects (<a href="https://github.com/fastify/fastify">fastify</a> is my favourite) but I also developed a Python library for Recommendation Systems called <a href="https://github.com/giuliowaitforitdavide/recsyslearn">recsyslearn</a>. <br/> Go <a href="https://github.com/giuliowaitforitdavide/recsyslearn">check</a> it out and leave a ⭐ if you liked it 🥰</p>
 
 ###
 
