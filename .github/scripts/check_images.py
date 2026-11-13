@@ -4,8 +4,9 @@ Stats cards and badges often answer 200 even when broken: the error is drawn
 inside the SVG ("Something went wrong!", "inaccessible", ...). A plain link
 checker cannot see that, so this script downloads each image and looks inside.
 
-Images are discovered automatically from Markdown (`![alt](url)`) and HTML
-(`<img src>`, `<source srcset>`), so new images need no changes here.
+Images are discovered automatically from Markdown (inline and reference-style)
+and HTML (`<img src>`, `<source srcset>`), so new images need no changes here.
+Only remote (http/https) images are checked; local files are lychee's job.
 
 Usage: python check_images.py [FILE.md ...]   (default: every *.md in the repo)
 """
@@ -14,112 +15,143 @@ from __future__ import annotations
 
 import re
 import sys
-import time
-import urllib.error
-import urllib.request
+from dataclasses import dataclass
 from html import unescape
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-IMAGE_PATTERNS = [
-    re.compile(r"!\[[^\]]*\]\((https?://[^)\s]+)"),
-    re.compile(r"<img\b[^>]*?\ssrc=\"(https?://[^\"]+)\"", re.S),
-    re.compile(r"<source\b[^>]*?\ssrcset=\"(https?://[^\"]+)\"", re.S),
-]
+import urllib3
+from urllib3.util import Retry, Timeout
+
+INLINE_IMAGE = re.compile(r"!\[[^\]]*\]\(\s*<?(https?://[^)\s>]+)")
+REFERENCE_IMAGE = re.compile(r"!\[([^\]]*)\]\[([^\]]*)\]")
+REFERENCE_DEFINITION = re.compile(r"^[ ]{0,3}\[([^\]]+)\]:\s*<?(\S+?)>?(?:\s|$)", re.M)
+HTML_IMAGE = re.compile(r"<(?:img|source)\b[^>]*?\s(?:src|srcset)\s*=\s*([\"'])(https?://.+?)\1", re.S | re.I)
 
 # Text that services draw inside an image when something went wrong.
-ERROR_MARKERS = [
-    "something went wrong",  # github-readme-stats
-    "could not resolve",  # github-readme-stats: unknown user
-    "bad credentials",  # github-readme-stats: expired/invalid token
-    "rate limit",  # any GitHub-backed card
-    "inaccessible",  # shields.io: upstream unreachable
-    "invalid",  # shields.io: bad parameters
-    "not found",  # shields.io / streak stats
-]
+# Markers under None apply to every image: they are specific enough not to appear in a healthy one.
+ERROR_MARKERS: dict[str | None, tuple[str, ...]] = {
+    None: (
+        "something went wrong",  # github-readme-stats (any self-hosted instance)
+        "could not resolve",  # github-readme-stats: unknown user
+        "bad credentials",  # GitHub-backed cards: expired or invalid token
+        "rate limit",  # GitHub-backed cards
+    ),
+    # shields.io and services built on it draw short generic words: only trust them there.
+    "img.shields.io": ("inaccessible", "invalid", "not found"),
+    "custom-icon-badges.demolab.com": ("inaccessible", "invalid", "not found"),
+}
 
-ATTEMPTS = 3
-TIMEOUT = 30
+RETRY = Retry(
+    total=3,
+    backoff_factor=2,  # waits 0s, 4s, 8s between attempts
+    status_forcelist=(429, 500, 502, 503, 504),
+    allowed_methods=("GET",),
+    raise_on_status=False,  # after the last retry, return the response so it can be reported
+)
+HTTP = urllib3.PoolManager(
+    retries=RETRY,
+    timeout=Timeout(connect=10, read=30),
+    headers={"User-Agent": "readme-image-check"},
+)
 
 
-def find_images(files: list[Path]) -> dict[str, list[str]]:
-    """Map each image URL to the files that reference it."""
-    images: dict[str, list[str]] = {}
+@dataclass(frozen=True)
+class Location:
+    file: str
+    line: int
+
+
+def _line_of(text: str, index: int) -> int:
+    return text.count("\n", 0, index) + 1
+
+
+def find_images(files: list[Path]) -> dict[str, list[Location]]:
+    """Map each remote image URL to every place that references it."""
+    images: dict[str, list[Location]] = {}
+
+    def add(url: str, file: Path, text: str, index: int) -> None:
+        url = unescape(url)
+        if url.startswith(("http://", "https://")):
+            images.setdefault(url, []).append(Location(str(file), _line_of(text, index)))
+
     for file in files:
         text = file.read_text(encoding="utf-8")
-        for pattern in IMAGE_PATTERNS:
-            for url in pattern.findall(text):
-                images.setdefault(unescape(url), []).append(str(file))
-    return images
+        definitions = {m[1].strip().lower(): m[2] for m in REFERENCE_DEFINITION.finditer(text)}
+
+        for match in INLINE_IMAGE.finditer(text):
+            add(match[1], file, text, match.start())
+        for match in HTML_IMAGE.finditer(text):
+            add(match[2], file, text, match.start())
+        for match in REFERENCE_IMAGE.finditer(text):
+            label = (match[2] or match[1]).strip().lower()  # `![alt][]` uses the alt text as label
+            if label in definitions:
+                add(definitions[label], file, text, match.start())
+
+    # Report in document order, whatever pattern found each image.
+    for locations in images.values():
+        locations.sort(key=lambda loc: (loc.file, loc.line))
+    return dict(sorted(images.items(), key=lambda item: (item[1][0].file, item[1][0].line)))
 
 
-def fetch(url: str) -> tuple[int, str, bytes]:
-    request = urllib.request.Request(url, headers={"User-Agent": "readme-image-check"})
-    last_error: Exception | None = None
-    for attempt in range(ATTEMPTS):
-        try:
-            with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
-                return response.status, response.headers.get("Content-Type", ""), response.read()
-        except urllib.error.HTTPError as error:
-            if error.code < 500 and error.code != 429:
-                return error.code, error.headers.get("Content-Type", ""), error.read()
-            last_error = error
-        except (urllib.error.URLError, TimeoutError) as error:
-            last_error = error
-        time.sleep(5 * (attempt + 1))
-    raise RuntimeError(f"no response after {ATTEMPTS} attempts: {last_error}")
-
-
-def problems_for(url: str) -> list[str]:
-    try:
-        status, content_type, body = fetch(url)
-    except RuntimeError as error:
-        return [str(error)]
-
+def inspect(url: str, status: int, content_type: str, body: bytes) -> list[str]:
+    """Return what is wrong with a downloaded image (empty list if it is fine)."""
     if not 200 <= status < 300:
         return [f"HTTP {status}"]
-    if not content_type.startswith("image/"):
+    if not content_type.lower().startswith("image/"):
         return [f"not an image (Content-Type: {content_type or 'missing'})"]
-    if "svg" not in content_type:
+    if "svg" not in content_type.lower():
         return []
 
     svg = body.decode("utf-8", errors="replace")
     visible_text = " ".join(re.findall(r">([^<]+)<", svg)).lower()
-    problems = [f"shows '{marker}'" for marker in ERROR_MARKERS if marker in visible_text]
+    host = urlparse(url).hostname
+    markers = ERROR_MARKERS[None] + ERROR_MARKERS.get(host, ())
+    problems = [f"shows '{marker}'" for marker in markers if marker in visible_text]
 
     # skillicons.dev silently drops unknown icon names: compare requested vs rendered.
-    parsed = urlparse(url)
-    if parsed.hostname == "skillicons.dev":
-        requested = [i for i in parse_qs(parsed.query).get("i", [""])[0].split(",") if i]
-        rendered = svg.count("<svg") - 1  # one outer <svg> wraps one <svg> per icon
+    if host == "skillicons.dev":
+        requested = [i for i in parse_qs(urlparse(url).query).get("i", [""])[0].split(",") if i]
+        rendered = max(svg.count("<svg") - 1, 0)  # one outer <svg> wraps one <svg> per icon
         if rendered != len(requested):
             problems.append(f"renders {rendered} of {len(requested)} requested icons")
 
     return problems
 
 
-def main() -> int:
-    files = [Path(f) for f in sys.argv[1:]] or sorted(
-        p for p in Path(".").rglob("*.md") if not any(part.startswith(".") for part in p.parts)
+def check(url: str) -> list[str]:
+    try:
+        response = HTTP.request("GET", url)
+    except urllib3.exceptions.HTTPError as error:  # includes MaxRetryError, timeouts, protocol errors
+        return [f"request failed: {error}"]
+    return inspect(url, response.status, response.headers.get("Content-Type", ""), response.data)
+
+
+def markdown_files(root: Path) -> list[Path]:
+    return sorted(
+        p for p in root.rglob("*.md") if not any(part.startswith(".") for part in p.relative_to(root).parts)
     )
+
+
+def main(argv: list[str]) -> int:
+    files = [Path(f) for f in argv] or markdown_files(Path("."))
     images = find_images(files)
     if not images:
-        print("No images found.")
+        print("::error::No remote images found: is the image discovery broken?")
         return 1
 
     failures = 0
-    for url, sources in images.items():
-        problems = problems_for(url)
-        status = "FAIL" if problems else "ok"
-        print(f"[{status}] {url}")
+    for url, locations in images.items():
+        problems = check(url)
+        print(f"[{'FAIL' if problems else 'ok'}] {url}")
         for problem in problems:
             failures += 1
-            print(f"       -> {problem} (in {', '.join(sorted(set(sources)))})")
-            print(f"::error file={sources[0]}::{url} {problem}")
+            where = locations[0]
+            print(f"::error file={where.file},line={where.line}::{problem}: {url}")
 
     print(f"\n{len(images)} images checked, {failures} problem(s).")
     return 1 if failures else 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
