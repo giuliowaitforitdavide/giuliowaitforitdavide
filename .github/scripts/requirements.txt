@@ -1,0 +1,3 @@
+# Dependencies of check_images.py and its tests (kept up to date by Dependabot).
+urllib3==2.8.0
+pytest==9.2.0

@@ -1,0 +1,17 @@
+# Configuration for the link checker (https://lychee.cli.rs) used by .github/workflows/checks.yml.
+# Links are discovered automatically from every Markdown file: nothing to update here when adding new ones.
+
+# Treat rate limiting as "alive": the link exists, the server just asked us to slow down.
+accept = ["200..=299", "429"]
+
+max_retries = 3
+retry_wait_time = 5
+timeout = 30
+
+# mailto: links cannot be verified reliably.
+include_mail = false
+
+exclude = [
+  # LinkedIn always answers 999 to automated requests, even for valid profiles.
+  '^https?://([a-z]+\.)?linkedin\.com/',
+]
