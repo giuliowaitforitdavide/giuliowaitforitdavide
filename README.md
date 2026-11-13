@@ -14,12 +14,12 @@ to local LLM inference.
 
 ## 🌱 Open source
 
-- **[antirez/ds4](https://github.com/antirez/ds4)** — local inference engine for DeepSeek V4 (C). Image decoding, tokenizer, CI. _(current)_
-- **[Fastify](https://github.com/fastify/fastify)** — contributions to the core (plugin & hook lifecycle), TypeScript types and docs
-- **[Mia-Platform](https://github.com/mia-platform)** — [crud-service](https://github.com/mia-platform/crud-service) and related libraries, while working there
-- Fixes here and there in **Vite**, **FastAPI**, **ajv-formats**
+- **[antirez/ds4](https://github.com/antirez/ds4)** — local inference engine for DeepSeek V4 (C). Image decoding, tokenizer, CI. _(current)_ · [my commits](https://github.com/antirez/ds4/commits?author=giuliowaitforitdavide)
+- **[Fastify](https://github.com/fastify/fastify)** — contributions to the core (plugin & hook lifecycle), TypeScript types and docs · [my commits](https://github.com/fastify/fastify/commits?author=giuliowaitforitdavide)
+- **[Mia-Platform](https://github.com/mia-platform)** — open source data services and libraries, while working there · my commits on [crud-service](https://github.com/mia-platform/crud-service/commits?author=giuliowaitforitdavide), [custom-plugin-lib](https://github.com/mia-platform/custom-plugin-lib/commits?author=giuliowaitforitdavide), [kafka-healthchecker](https://github.com/mia-platform/kafka-healthchecker/commits?author=giuliowaitforitdavide), [documentation](https://github.com/mia-platform/documentation/commits?author=giuliowaitforitdavide)
+- Fixes here and there in [Vite](https://github.com/vitejs/vite/commits?author=giuliowaitforitdavide), [FastAPI](https://github.com/fastapi/fastapi/commits?author=giuliowaitforitdavide), [ajv-formats](https://github.com/ajv-validator/ajv-formats/commits?author=giuliowaitforitdavide)
 
-→ [All my merged PRs outside my own repos](https://github.com/search?q=is%3Apr+is%3Amerged+author%3Agiuliowaitforitdavide+-user%3Agiuliowaitforitdavide+-user%3Afiscozen&type=pullrequests) · [my commits on ds4 `main`](https://github.com/antirez/ds4/commits/main/?author=giuliowaitforitdavide) _(merged from the command line, so not counted as merged PRs)_
+→ [All my merged PRs outside my own repos](https://github.com/search?q=is%3Apr+is%3Amerged+author%3Agiuliowaitforitdavide+-user%3Agiuliowaitforitdavide+-user%3Afiscozen&type=pullrequests) _(PRs merged from the command line, like on ds4, show up only in the commit links above)_
 
 ## 🧪 Projects
 
