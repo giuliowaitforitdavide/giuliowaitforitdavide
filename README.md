@@ -19,7 +19,7 @@ to local LLM inference.
 - **[Mia-Platform](https://github.com/mia-platform)** — [crud-service](https://github.com/mia-platform/crud-service) and related libraries, while working there
 - Fixes here and there in **Vite**, **FastAPI**, **ajv-formats**
 
-→ [All my merged PRs outside my own repos](https://github.com/search?q=is%3Apr+is%3Amerged+author%3Agiuliowaitforitdavide+-user%3Agiuliowaitforitdavide+-user%3Afiscozen&type=pullrequests)
+→ [All my merged PRs outside my own repos](https://github.com/search?q=is%3Apr+is%3Amerged+author%3Agiuliowaitforitdavide+-user%3Agiuliowaitforitdavide+-user%3Afiscozen&type=pullrequests) · [my commits on ds4 `main`](https://github.com/antirez/ds4/commits/main/?author=giuliowaitforitdavide) _(merged from the command line, so not counted as merged PRs)_
 
 ## 🧪 Projects
 
@@ -49,4 +49,11 @@ Feature-complete and in maintenance mode — kept compatible with the latest pan
 
 ## 📫 Contact
 
-[LinkedIn](https://www.linkedin.com/in/giuliowaitforitdavide/) · [Email](mailto:giuliowaitforitdavide@duck.com)
+<p align="center">
+  <a href="mailto:giuliowaitforitdavide@duck.com">
+    <img alt="Email" src="https://img.shields.io/badge/DuckDuckGo-DE5833?style=for-the-badge&logo=duckduckgo&logoColor=white" />
+  </a>
+  <a href="https://it.linkedin.com/in/giuliowaitforitdavide/">
+    <img alt="LinkedIn" src="https://custom-icon-badges.demolab.com/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin-white&logoColor=white" />
+  </a>
+</p>
