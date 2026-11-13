@@ -28,16 +28,13 @@ accuracy (NDCG), beyond-accuracy (coverage, novelty) and group fairness (entropy
 with built-in user/item segmentations. Available on [PyPI](https://pypi.org/project/recsyslearn/).
 Feature-complete and in maintenance mode — kept compatible with the latest pandas/numpy.
 
-## 🧭 Technologies I've met along the way
+## 🧰 What I've worked with
 
-**Every day** &nbsp; ![Python, Django, FastAPI, Vue.js, TypeScript, JavaScript, Vite, PostgreSQL, Redis, Docker](https://skillicons.dev/icons?i=python,django,fastapi,vuejs,ts,js,vite,postgres,redis,docker)
+<p align="center"><sub><b>EVERY DAY</b></sub><br><br><img alt="Python, Django, FastAPI, Vue.js, TypeScript, JavaScript, Vite, PostgreSQL, Redis, Docker" src="https://skillicons.dev/icons?i=python,django,fastapi,vuejs,ts,js,vite,postgres,redis,docker" /></p>
 
-**Along the way** &nbsp; ![Node.js, MongoDB, Kafka, React, Tailwind CSS, Firebase, Kubernetes, AWS, GitHub Actions, C](https://skillicons.dev/icons?i=nodejs,mongodb,kafka,react,tailwind,firebase,kubernetes,aws,githubactions,c)
+<p align="center"><sub><b>ALONG THE WAY</b></sub><br><br><img alt="Node.js, MongoDB, Kafka, React, Tailwind CSS, Firebase, Kubernetes, AWS, GitHub Actions, C" src="https://skillicons.dev/icons?i=nodejs,mongodb,kafka,react,tailwind,firebase,kubernetes,aws,githubactions,c" /></p>
 
-**AI pair programmers** &nbsp;
-![Claude](https://img.shields.io/badge/Claude-D97757?style=for-the-badge&logo=claude&logoColor=white)
-![Cursor](https://img.shields.io/badge/Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)
-![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-000000?style=for-the-badge&logo=githubcopilot&logoColor=white)
+<p align="center"><sub><b>AI PAIR PROGRAMMERS</b></sub><br><br><img alt="Claude" src="https://img.shields.io/badge/Claude-D97757?style=for-the-badge&logo=claude&logoColor=white" /> <img alt="Cursor" src="https://img.shields.io/badge/Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white" /> <img alt="GitHub Copilot" src="https://img.shields.io/badge/GitHub%20Copilot-000000?style=for-the-badge&logo=githubcopilot&logoColor=white" /></p>
 
 ## 📊 Stats
 
