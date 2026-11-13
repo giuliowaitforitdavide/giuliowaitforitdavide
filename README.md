@@ -28,13 +28,16 @@ accuracy (NDCG), beyond-accuracy (coverage, novelty) and group fairness (entropy
 with built-in user/item segmentations. Available on [PyPI](https://pypi.org/project/recsyslearn/).
 Feature-complete and in maintenance mode — kept compatible with the latest pandas/numpy.
 
-## 🛠️ Stack
+## 🧭 Technologies I've met along the way
 
-**Backend** &nbsp; ![Python, Django, FastAPI, Node.js](https://skillicons.dev/icons?i=python,django,fastapi,nodejs)
+**Every day** &nbsp; ![Python, Django, FastAPI, Vue.js, TypeScript, JavaScript, Vite, PostgreSQL, Redis, Docker](https://skillicons.dev/icons?i=python,django,fastapi,vuejs,ts,js,vite,postgres,redis,docker)
 
-**Frontend** &nbsp; ![Vue.js, TypeScript, JavaScript, Vite](https://skillicons.dev/icons?i=vuejs,ts,js,vite)
+**Along the way** &nbsp; ![Node.js, MongoDB, Kafka, React, Tailwind CSS, Firebase, Kubernetes, AWS, GitHub Actions, C](https://skillicons.dev/icons?i=nodejs,mongodb,kafka,react,tailwind,firebase,kubernetes,aws,githubactions,c)
 
-**Data & infra** &nbsp; ![PostgreSQL, MongoDB, Kafka, Docker, Kubernetes](https://skillicons.dev/icons?i=postgres,mongodb,kafka,docker,kubernetes)
+**AI pair programmers** &nbsp;
+![Claude](https://img.shields.io/badge/Claude-D97757?style=for-the-badge&logo=claude&logoColor=white)
+![Cursor](https://img.shields.io/badge/Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)
+![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-000000?style=for-the-badge&logo=githubcopilot&logoColor=white)
 
 ## 📊 Stats
 
