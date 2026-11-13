@@ -1,4 +1,4 @@
-# Configuration for the link checker (https://lychee.cli.rs) used by .github/workflows/links.yml.
+# Configuration for the link checker (https://lychee.cli.rs) used by .github/workflows/checks.yml.
 # Links are discovered automatically from every Markdown file: nothing to update here when adding new ones.
 
 # Treat rate limiting as "alive": the link exists, the server just asked us to slow down.

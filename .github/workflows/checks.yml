@@ -1,0 +1,47 @@
+name: README checks
+
+on:
+  push:
+    branches: [main]
+    paths: ["**.md", "lychee.toml", ".github/**"]
+  pull_request:
+    paths: ["**.md", "lychee.toml", ".github/**"]
+  schedule:
+    # Every Monday at 07:00 UTC: external links and cards can break without any change here.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    name: Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check links in Markdown files
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --config lychee.toml --no-progress './**/*.md'
+          fail: true
+
+  images:
+    name: Images render
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Stats cards and badges answer 200 even when they draw an error: look inside each image.
+      - name: Check that images render without errors
+        run: python3 .github/scripts/check_images.py
+
+  spelling:
+    name: Spelling
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check spelling
+        uses: crate-ci/typos@276087d9a4f06398b3e04825487805e2d7375888 # v1.52.2
